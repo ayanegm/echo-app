@@ -41,15 +41,14 @@ Advanced state isolation using **Cubit, BLoC, and Provider**:
 
 ```text
 lib/
-├── features/
-│   ├── feed/
-│   │   ├── data/          # Repositories & Data Sources
-│   │   ├── domain/        # Entities & Use cases
-│   │   └── presentation/  # Widgets & Cubits/BLoCs
-│   ├── profile/
-│   └── authentication/
 ├── core/
-│   ├── theme/             # Global styles and branding
-│   ├── network/           # API and Firebase clients
-│   └── utils/             # Constants and helpers
-└── main.dart
+│   └── theme/             # Global styling, app_colors.dart, etc.
+├── features/
+│   ├── auth/              # Authentication flow (cubit, models, pages, widgets)
+│   ├── posts/             # Post creation and feeds (pages, widgets, cubit)
+│   ├── profile/           # User profile management (profile_cubit.dart, etc.)
+│   └── search/            # User discovery and search functionality
+├── screens/               # Main or top-level layout screens
+├── widgets/               # Shared global reusable widgets
+├── firebase_options.dart  # Auto-generated Firebase configurations
+└── main.dart              # Application entry point
