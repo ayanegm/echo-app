@@ -34,22 +34,48 @@ Future<void>signUpWithEmailAndPassword({required String email,required password}
       }
 
 }
-Future<void> setupUserProfile({required String name,required String username,required String email,required String uid,String? bio,String? link})async{
+Future<void> setupUserProfile({
+    required String name,
+    required String username,
+    required String email,
+    required String uid,
+    String? bio,
+    String? link,
+  }) async {
     emit(AuthLoadingState());
-    try{
-      final usernmaeCheck=await _firestore.collection('users').where('username',isEqualTo: username.trim().toLowerCase()).get();
-      if(usernmaeCheck.docs.isNotEmpty){
+    try {
+      final usernmaeCheck = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: username.trim().toLowerCase())
+          .get();
+          
+      if (usernmaeCheck.docs.isNotEmpty) {
         emit(AuthFailureState(errorMessage: "username is already used"));
         return;
       }
-      UserModel newUser=UserModel(uid:uid , searchName: name.trim().toLowerCase(),name: name, email: email, username: username.trim().toLowerCase(),bio:bio,link: link, );
+      
+      UserModel newUser = UserModel(
+        uid: uid,
+        searchName: name.trim().toLowerCase(),
+        name: name,
+        email: email,
+        username: username.trim().toLowerCase(),
+        bio: bio,
+        link: link,
+        followers: const [], // تأكدي من تهيئة اللستة كـ افتراضية لو مش مبعوتة
+        following: const [],
+      );
+      
       await _firestore.collection('users').doc(uid).set(newUser.toMap());
+      
+      // 🔥 الحل السحري هنا: تحديث الـ currentUser محلياً جوه الـ Cubit فوراً عند إنشاء الحساب
+      currentUser = newUser; 
+      
       emit(AuthProfileSetupSuccess());
-    }
-    catch(e){
+    } catch (e) {
       emit(AuthFailureState(errorMessage: e.toString()));
     }
-}
+  }
   Future<void>signInWithEmailAndPassword({required String email,required String password})async{
     emit(AuthLoadingState());
     try{

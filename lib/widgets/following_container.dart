@@ -14,52 +14,58 @@ class FollowingContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileCubit, ProfileState>(
-      // 🔥 شيلنا الـ buildWhen تماماً عشان الـ Bloc Builder ما يعلقش الضغطات
       builder: (context, state) {
         
-        // 1. الحالة الافتراضية من الـ Cubit
         bool isCurrentlyFollowing = context.read<ProfileCubit>().isUserFollowing(user.uid); 
 
-        // 2. التحقق من الـ Followers في الفايربيز
         final String myUid = FirebaseAuth.instance.currentUser?.uid ?? '';
         if (user.followers.contains(myUid)) {
           isCurrentlyFollowing = true;
         }
 
-        // 3. لو الـ State اتغيرت حالا بسبب الضغط، بنجبره ياخد الحالة الجديدة فوراً
         if (state is FollowStatusChanged && state.userId == user.uid) {
           isCurrentlyFollowing = state.isFollowing;
         }
 
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child:
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(user.name, style: const TextStyle(color: AppColor.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 2),
-                      Text("@${user.username}", style: const TextStyle(color: AppColor.greyForText)),
-                    ],
+                  CircleAvatar(
+        radius: 20,
+        backgroundColor: AppColor.ContainerbackGroundColor,
+        child: Text(
+          user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+      ),
+      const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.name, style: const TextStyle(color: AppColor.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 2),
+                        Text("@${user.username}", style: const TextStyle(color: AppColor.greyForText)),
+                        const SizedBox(height: 2),
+                        Text(user.bio ?? '', style: const TextStyle(color: AppColor.white))
+
+                      ],
+                    ),
                   ),
                   FollowButton(
                     isFollowing: isCurrentlyFollowing,
                     onTap: () {
-                      print("🎯 Button tapped for user: ${user.uid}");
+                      print(" Button tapped for user: ${user.uid}");
                       context.read<ProfileCubit>().toggleFollow(user.uid);
                     },
                   ),
                 ],
               ),
-              const SizedBox(height: 3),
-              Text(user.bio ?? '', style: const TextStyle(color: AppColor.white))
-            ],
-          ),
+           
         );
       },
     );

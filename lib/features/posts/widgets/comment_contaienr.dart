@@ -37,15 +37,36 @@ class _CommentContainerState extends State<CommentContainer> {
                       name=snapshot.data!['name'];
                     }
                     return  Row(
-                       
+                       crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          
-                          Text(
-                            '${name}'
-                            ,style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              color: AppColor.white
+                             CircleAvatar(
+                radius: 16, 
+                backgroundColor:AppColor.ContainerbackGroundColor ,
+                child: Text(
+                  name.isNotEmpty && name != 'Loading...'
+                      ? name[0].toUpperCase()
+                      : 'U',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${name}'
+                                  ,style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: AppColor.white
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(width: 6,),
@@ -65,23 +86,29 @@ class _CommentContainerState extends State<CommentContainer> {
                  ),
                 SizedBox(height: 8,),
          
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8, 
-                  child: Text(
-                    '${widget.comment.text}',
-                    style: TextStyle(
-                      color: AppColor.white,
-                      fontSize: 14,
-                      height: 1.4,  
+                Padding(
+padding: const EdgeInsets.only(left: 7.0, top: 4, bottom: 4),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8, 
+                    child: Text(
+                      '${widget.comment.text}',
+                      style: TextStyle(
+                        color: AppColor.white,
+                        fontSize: 14,
+                        height: 1.4,  
+                      ),
+                      softWrap: true, 
+                      overflow: TextOverflow.visible,
                     ),
-                    softWrap: true, 
-                    overflow: TextOverflow.visible,
                   ),
                 ),
                 Row(
                   
                   children: [
-                    IconButton(onPressed: () {
+                    IconButton(
+                      padding: EdgeInsets.zero,
+constraints: const BoxConstraints(),
+visualDensity: VisualDensity.compact,onPressed: () {
                       context.read<PostCubit>().toggleLike(tweetId: widget.comment.postId, userId:context.read<AuthCubit>().currentUser!.uid,commentId: widget.comment.commentId );
                     }, icon:Icon(widget.comment.likes.contains(context.read<AuthCubit>().currentUser?.uid)? Icons.favorite: Icons.favorite_border,color:widget.comment.likes.contains(context.read<AuthCubit>().currentUser?.uid)? Colors.red: AppColor.white,)),
                     Text('${widget.comment.likeCount}',style: TextStyle(fontSize: 12,color: Colors.white,),)

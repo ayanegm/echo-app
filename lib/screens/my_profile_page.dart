@@ -29,11 +29,24 @@ class ProfilePage extends StatelessWidget {
           bottomNavigationBar: CustomBottomNavigatorBar(selectedIndex: 0),
           backgroundColor: Colors.black,
           body: Padding(
-            padding: const EdgeInsets.only(left: 15.0,right: 15),
+            padding: const EdgeInsets.only(left: 15.0,right: 15,top: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CircleAvatar(
+                radius: 38, 
+                backgroundColor: Color(0xFF455a64), 
+                child: Text(
+                  name.isNotEmpty ? name[0].toUpperCase() : 'N',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
                 Text(name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19,color: Color(0xFFe5e7e8)),),
                 Text('@$username',style: TextStyle(color:AppColor.greyForText),),
                 SizedBox(height: 5,),

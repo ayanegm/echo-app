@@ -94,10 +94,11 @@ builder: (BuildContext context, StateSetter setSheetState) {
       },);
     }
     return Container(
-  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 12),
+  padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
     
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           FutureBuilder(
             future: FirebaseFirestore.instance.collection('users').doc(tweetsModel.authorId).get(),
@@ -107,8 +108,23 @@ builder: (BuildContext context, StateSetter setSheetState) {
                 name=snapshot.data!['name'];
               }
               return Row(
-               
+    
                 children: [
+                  CircleAvatar(
+                radius: 16, 
+                backgroundColor:AppColor.ContainerbackGroundColor ,
+                child: Text(
+                  name.isNotEmpty && name != 'Loading...'
+                      ? name[0].toUpperCase()
+                      : 'U',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8,),
                   Text(
                     name
                     ,style: TextStyle(
@@ -117,8 +133,7 @@ builder: (BuildContext context, StateSetter setSheetState) {
                       color: AppColor.white
                     ),
                   ),
-                  SizedBox(width: 6,),
-                  Text(
+const Spacer(),                  Text(
                     "${tweetsModel.createdAt.hour}:${tweetsModel.createdAt.minute}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -131,9 +146,10 @@ builder: (BuildContext context, StateSetter setSheetState) {
               );
             }
           ),
-          SizedBox(height: 8,),
+          SizedBox(height: 12,),
 
           SizedBox(
+            
             width: MediaQuery.of(context).size.width * 0.8, 
             child: Text(
               tweetsModel.text,
@@ -146,17 +162,25 @@ builder: (BuildContext context, StateSetter setSheetState) {
               overflow: TextOverflow.visible,
             ),
           ),
+          SizedBox(height: 12,),
           Row(
-            
             children: [
-              IconButton(onPressed: () {
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                visualDensity: VisualDensity.compact,
+                onPressed: () {
                 final currentUser=context.read<AuthCubit>().currentUser;
                 if(currentUser!=null){
                   context.read<PostCubit>().toggleLike(tweetId:tweetsModel.tweetId , userId: currentUser.uid);
                 }
               }, icon:Icon(tweetsModel.likes.contains(context.read<AuthCubit>().currentUser?.uid)? Icons.favorite: Icons.favorite_border,color:tweetsModel.likes.contains(context.read<AuthCubit>().currentUser?.uid)? Colors.red: AppColor.white,)),
               Text('${tweetsModel.likeCount}',style: TextStyle(color: Colors.white,fontSize: 12),)
-              ,IconButton(onPressed: () =>_showCommentSheet(context), icon:Icon( Icons.chat_bubble_outline,color: AppColor.white,)),
+              
+              ,SizedBox(width: 19,),
+              IconButton(padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                visualDensity: VisualDensity.compact,onPressed: () =>_showCommentSheet(context), icon:Icon( Icons.chat_bubble_outline,color: AppColor.white,)),
               Text('${tweetsModel.commentCount}',style: TextStyle(color: Colors.white,fontSize: 12),)
             ],
           )

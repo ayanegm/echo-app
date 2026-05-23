@@ -27,6 +27,19 @@ final TextEditingController passwordController=TextEditingController();
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Align(
+  alignment: Alignment.centerLeft,
+  child: Text(
+    'echo.',
+    style: TextStyle(
+      color: Colors.white70, 
+      fontSize: 24,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.5, 
+    ),
+  ),
+),
+const SizedBox(height: 40),
                 Spacer(),
                 AuthTextField(field_title: 'Enter your email', controller: emailController, validator: (val) {
                     if(val==''){

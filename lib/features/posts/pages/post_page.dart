@@ -38,10 +38,8 @@ class _PostPageState extends State<PostPage> {
   onTap: () {
     print("🔘 Post Button Clicked!");
     
-    // 1. بنحاول نجيب الـ user من الـ Cubit
     var user = context.read<AuthCubit>().currentUser;
     
-    // 2. خط الدفاع الثاني: لو بـ null بسبب الحساب الجديد، بنصنعه طازة بأمان
     if (user == null) {
       final firebaseUser = FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
@@ -51,7 +49,7 @@ class _PostPageState extends State<PostPage> {
         user = UserModel(
           uid: firebaseUser.uid,
           name: displayName,
-          searchName: displayName.trim().toLowerCase(), // 🔥 ضفنا الـ searchName هنا عشان الموديل يكتمل صح
+          searchName: displayName.trim().toLowerCase(), 
           username: generatedUsername.trim().toLowerCase(),
           email: firebaseUser.email ?? '',
           followers: const [],
